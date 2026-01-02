@@ -1,0 +1,2 @@
+Hello from async node.js
+This data is for new line
