@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Users</title>
+</head>
+<body>
+    <table border="1">
+            <thead>
+                <th>profile</th>
+                <th>username</th>
+                <th>email</th>
+                <th>city</th>
+                <th>gender</th>
+                <th>age</th>
+                <th>Actions</th>
+            </thead>
+            <tbody id="tableData">
+                
+            </tbody>
+    </table>
+</body>
+<script>
+    const apiurl='http://localhost:3000/api/images';
+    async function viewStudnets() {
+        const res=await fetch(`${apiurl}/all-students`);
+        const studentData=await res.json();
+        console.log(studentData);
+        const tbody=document.querySelector('#tableData');
+        tbody.innerHTML='';
+        studentData.data.forEach(student => {
+            tbody.innerHTML+=
+            `
+            <tr>
+                    <td><img src='http://localhost:3000/uploads/${student.profile_pic} alt"user', width='200' height='200' ></td>
+                    <td>${student.username}</td>
+                    <td>${student.email}</td>
+                    <td>${student.city}</td>
+                    <td>${student.gender}</td>
+                    <td>${student.age}</td>
+                    <td>
+                        <button onclick="updateStudent(${student._id})">update</button>
+                        <button onclick="deleteStudent(${student._id})">delete</button></td>
+                </tr>
+            `
+        });
+       
+    }
+    viewStudnets();
+    async function updateStudent(id){
+        const student=await fetch(`${apiurl}/update-student/${id}`);
+        const formData= new FormData(this);
+        if(student){
+            const update=await fetch(apiurl,{
+                method:'PUT',
+                data:formData
+            })
+        }
+        if(res.ok){
+            alert('student updated')
+        }
+    }
+    async function deleteStudent(id) {
+        if(confirm('do you want to delete?')){
+            await fetch(`${apiurl}/delete-student/${id}`,{
+            method:'DELETE',
+        });
+        }
+        viewStudnets();
+    }
+</script>
+</html>
